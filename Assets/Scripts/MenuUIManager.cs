@@ -6,12 +6,16 @@ using UnityEngine.SceneManagement;
 
 public class MenuUIManager : MonoBehaviour
 {
-    [SerializeField] private Text userNameInput;
+    [SerializeField] private InputField userNameInput;
 
     // Start is called before the first frame update
     void Start()
     {
-        GameManager.Instance.userName = "Name";
+        if (GameManager.Instance)
+        {
+            userNameInput.text = GameManager.Instance.userName;
+        }
+        
     }
 
     public void UpdateUserName()
@@ -21,6 +25,7 @@ public class MenuUIManager : MonoBehaviour
 
     public void StartGame()
     {
+        GameManager.Instance.SaveDataToDisc();
         SceneManager.LoadScene("Main");
     }
 }
