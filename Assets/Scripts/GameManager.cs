@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
     { get; private set; }
 
     public string userName;
+    public string highScoreUserName;
+    public int highScore;
 
     private Func<string> GenSaveFilePath;
 
@@ -29,10 +31,18 @@ public class GameManager : MonoBehaviour
         LoadDataFromDisc();
     }
 
+    public void SetNewHighScore(string user, int score)
+    {
+        Instance.highScoreUserName = user;
+        Instance.highScore = score;
+    }
+
     [Serializable]
     class SaveData
     {
         public string lastUserName;
+        public string highScoreUserName;
+        public int highScore;
     }
 
     public void SaveDataToDisc()
@@ -40,6 +50,8 @@ public class GameManager : MonoBehaviour
         Debug.Log("saving");
         SaveData data = new SaveData();
         data.lastUserName = Instance.userName;
+        data.highScoreUserName = Instance.highScoreUserName;
+        data.highScore = Instance.highScore;
 
         string json = JsonUtility.ToJson(data);
         File.WriteAllText(GenSaveFilePath(), json);
@@ -56,5 +68,7 @@ public class GameManager : MonoBehaviour
         string json = File.ReadAllText(GenSaveFilePath());
         SaveData data = JsonUtility.FromJson<SaveData>(json);
         Instance.userName = data.lastUserName;
+        Instance.highScoreUserName = data.highScoreUserName;
+        Instance.highScore = data.highScore;
     }
 }

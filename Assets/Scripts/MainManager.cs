@@ -12,6 +12,7 @@ public class MainManager : MonoBehaviour
 
     public Text ScoreText;
     [SerializeField] private Text nameText;
+    [SerializeField] private Text highScoreText;
     public GameObject GameOverText;
     
     private bool m_Started = false;
@@ -38,10 +39,15 @@ public class MainManager : MonoBehaviour
             }
         }
 
-        //set username
+        //set username and highscore
         if (GameManager.Instance)
         {
+            if (GameManager.Instance.userName.Length < 1)
+            {
+                GameManager.Instance.userName = "Player 1";
+            }
             nameText.text = $"Player: {GameManager.Instance.userName}";
+            UpdateHighScoreText();
         }
     }
 
@@ -73,11 +79,28 @@ public class MainManager : MonoBehaviour
     {
         m_Points += point;
         ScoreText.text = $"Score : {m_Points}";
+
+        if (GameManager.Instance && m_Points > GameManager.Instance.highScore)
+        {
+            GameManager.Instance.highScore = m_Points;
+            GameManager.Instance.highScoreUserName = GameManager.Instance.userName;
+            UpdateHighScoreText();
+        }
     }
 
     public void GameOver()
     {
         m_GameOver = true;
         GameOverText.SetActive(true);
+        if (GameManager.Instance)
+        {
+            GameManager.Instance.SaveDataToDisc();
+        }
+    }
+
+    public void UpdateHighScoreText()
+    {
+        highScoreText.text = $"High Score by {GameManager.Instance.highScoreUserName}: " +
+                $"{GameManager.Instance.highScore}";
     }
 }
