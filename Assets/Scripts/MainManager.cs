@@ -11,6 +11,7 @@ public class MainManager : MonoBehaviour
     public Rigidbody Ball;
 
     public Text ScoreText;
+    [SerializeField] private Text nameText;
     public GameObject GameOverText;
     
     private bool m_Started = false;
@@ -35,6 +36,12 @@ public class MainManager : MonoBehaviour
                 brick.PointValue = pointCountArray[i];
                 brick.onDestroyed.AddListener(AddPoint);
             }
+        }
+
+        //set username
+        if (GameManager.Instance)
+        {
+            nameText.text = $"Player: {GameManager.Instance.userName}";
         }
     }
 
